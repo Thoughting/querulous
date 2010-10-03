@@ -21,6 +21,10 @@ class AutoDisablingQueryEvaluatorFactory(
   def apply(dbhosts: List[String], dbname: String, username: String, password: String, urlOptions: Map[String, String]) = {
     chainEvaluator(queryEvaluatorFactory(dbhosts, dbname, username, password, urlOptions))
   }
+
+  def apply(dbhosts: List[String], dbname: String, username: String, password: String) = {
+    chainEvaluator(queryEvaluatorFactory(dbhosts, dbname, username, password))
+  }
 }
 
 class AutoDisablingQueryEvaluator (

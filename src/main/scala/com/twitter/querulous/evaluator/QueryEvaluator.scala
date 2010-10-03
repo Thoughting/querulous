@@ -35,6 +35,10 @@ object QueryEvaluator extends QueryEvaluatorFactory {
   def apply(dbhosts: List[String], dbname: String, username: String, password: String, urlOptions: Map[String, String]) = {
     createEvaluatorFactory()(dbhosts, dbname, username, password, urlOptions)
   }
+
+  def apply(dbhosts: List[String], dbname: String, username: String, password: String) = {
+    createEvaluatorFactory()(dbhosts, dbname, username, password)
+  }
 }
 
 trait QueryEvaluatorFactory {
@@ -44,20 +48,16 @@ trait QueryEvaluatorFactory {
     apply(List(dbhost), dbname, username, password, urlOptions)
   }
 
-  def apply(dbhosts: List[String], dbname: String, username: String, password: String): QueryEvaluator = {
-    apply(dbhosts, dbname, username, password, null)
-  }
-
+  def apply(dbhosts: List[String], dbname: String, username: String, password: String): QueryEvaluator
   def apply(dbhost: String, dbname: String, username: String, password: String): QueryEvaluator = {
-    apply(List(dbhost), dbname, username, password, null)
+    apply(List(dbhost), dbname, username, password)
   }
 
   def apply(dbhost: String, username: String, password: String): QueryEvaluator = {
-    apply(List(dbhost), null, username, password, null)
+    apply(List(dbhost), null, username, password)
   }
-
   def apply(dbhosts: List[String], username: String, password: String): QueryEvaluator = {
-    apply(dbhosts, null, username, password, null)
+    apply(dbhosts, null, username, password)
   }
 
  def apply(config: ConfigMap): QueryEvaluator = {

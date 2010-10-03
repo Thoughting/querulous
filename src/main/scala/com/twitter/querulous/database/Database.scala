@@ -31,16 +31,21 @@ object DatabaseFactory {
     }
     new MemoizingDatabaseFactory(factory)
   }
+
+  val defaultUrlOptions = Map(
+    ("useUnicode" -> "true"),
+    ("characterEncoding" -> "UTF-8"),
+    ("connectTimeout", 1.second.inMillis.toString))
 }
 
 trait DatabaseFactory {
   def apply(dbhosts: List[String], dbname: String, username: String, password: String, urlOptions: Map[String, String]): Database
 
   def apply(dbhosts: List[String], dbname: String, username: String, password: String): Database =
-    apply(dbhosts, dbname, username, password, null)
+    apply(dbhosts, dbname, username, password, DatabaseFactory.defaultUrlOptions)
 
   def apply(dbhosts: List[String], username: String, password: String): Database =
-    apply(dbhosts, null, username, password, null)
+    apply(dbhosts, null, username, password, DatabaseFactory.defaultUrlOptions)
 }
 
 trait Database {
@@ -59,11 +64,7 @@ trait Database {
 
   protected def url(dbhosts: List[String], dbname: String, urlOptions: Map[String, String]) = {
     val dbnameSegment = if (dbname == null) "" else ("/" + dbname)
-    val urlOptsSegment = if (urlOptions == null) {
-      "?useUnicode=true&characterEncoding=UTF-8"
-    } else {
-      "?" + urlOptions.keys.map( k => k + "=" + urlOptions(k) ).mkString("&")
-    }
+    val urlOptsSegment = "?" + urlOptions.keys.map( k => k + "=" + urlOptions(k) ).mkString("&")
 
     "jdbc:mysql://" + dbhosts.mkString(",") + dbnameSegment + urlOptsSegment
   }
